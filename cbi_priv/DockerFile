@@ -1,0 +1,28 @@
+FROM ubuntu:22.04
+
+WORKDIR /init
+
+# 复制代码到容器
+COPY install.sh /init/install.sh
+
+# FRP 环境变量
+ENV FRP_TOKEN=Vh*F7T!Ktcs4yp3jUp7u
+# ZLM环境变量
+ENV ZLM_SECRET=e6c04be5-79ce-4d7f-8c55-c9bd653ade68
+
+# 安装
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" && \
+    apt-get install -y bash wget curl micro dmidecode git build-essential cmake libssl-dev libsdl1.2-compat-dev libavcodec-dev libavutil-dev ffmpeg
+
+# 设置默认 shell 为 Bash
+RUN usermod -s /bin/bash root
+
+# 安装脚本
+RUN sh /init/install.sh
+
+# 清理缓存
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+#   开始：2
+CMD ["sh", "/script/run.sh"]
