@@ -1,6 +1,6 @@
 # 变量
 tag=$(date +%Y%m%d%H%M)
-image=cbi_base_node16
+image=ct_wens_xlgz
 
 # 构建镜像
 docker build --no-cache -t $image:$tag -f DockerFile --network host ./

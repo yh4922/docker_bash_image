@@ -1,0 +1,22 @@
+{
+  "name": "init",
+  "version": "1.0.0",
+  "description": "初始化",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^10.1.0",
+    "node-downloader-helper": "1.0.18",
+    "node-stream-zip": "^1.15.0",
+    "node-pty-prebuilt-multiarch": "^0.10.1-pre.5",
+    "ws": "^8.13.0"
+  },
+  "volta": {
+    "node": "12.22.12",
+    "yarn": "1.22.19"
+  }
+}

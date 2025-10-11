@@ -1,0 +1,9 @@
+FROM ubuntu:22.04
+
+WORKDIR /init
+
+COPY package.json /init/package.json
+COPY install.sh /init/install.sh
+
+# 启动卡住容器，防止容器退出
+CMD ["tail", "-f", "/dev/null"]
