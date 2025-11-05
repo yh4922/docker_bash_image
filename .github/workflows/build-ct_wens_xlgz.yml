@@ -1,0 +1,72 @@
+name: Build Docker Image - ct_wens_xlgz
+
+on:
+  workflow_dispatch:
+    inputs:
+      custom_tag:
+        description: '自定义标签（可选，留空则使用当前北京时间）'
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set timezone to Asia/Shanghai and generate tag
+        id: tag
+        run: |
+          export TZ=Asia/Shanghai
+          if [ -z "${{ github.event.inputs.custom_tag }}" ]; then
+            TAG=$(date +%Y%m%d%H%M)
+          else
+            TAG="${{ github.event.inputs.custom_tag }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Generated tag: $TAG (Beijing Time)"
+
+      - name: Set image name
+        id: image
+        run: |
+          IMAGE_NAME="ct_wens_xlgz"
+          echo "image=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "Image name: $IMAGE_NAME"
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ steps.image.outputs.image }}
+          file: ./${{ steps.image.outputs.image }}/DockerFile
+          platforms: linux/${{ matrix.arch }}
+          tags: ${{ steps.image.outputs.image }}:${{ steps.tag.outputs.tag }}
+          push: false
+          load: true
+          no-cache: true
+          network: host
+          build-args: |
+            BUILDPLATFORM=linux/${{ matrix.arch }}
+
+      - name: Save Docker image
+        run: |
+          mkdir -p dist
+          docker save -o dist/${{ steps.image.outputs.image }}_${{ steps.tag.outputs.tag }}_${{ matrix.arch }}.tar \
+            ${{ steps.image.outputs.image }}:${{ steps.tag.outputs.tag }}
+          ls -lh dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.image.outputs.image }}-${{ steps.tag.outputs.tag }}-${{ matrix.arch }}
+          path: dist/${{ steps.image.outputs.image }}_${{ steps.tag.outputs.tag }}_${{ matrix.arch }}.tar
+          retention-days: 30
+          if-no-files-found: error
+
