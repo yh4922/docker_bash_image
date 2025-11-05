@@ -1,4 +1,18 @@
 #!/bin/bash
+###
+ # @Author: yangheng
+ # @Date: 2025-11-04 16:00:02
+ # @LastEditTime: 2025-11-05 12:05:28
+ # @FilePath: /docker_bash_image/cbi_priv/install.sh
+ # @Description: 
+ #
+###
+apt update -y
+apt install -y unzip git
+
+# 安装TUI编辑器
+curl https://getmic.ro | bash
+
 echo "openssl 安装"
 cd /
 wget https://www.openssl.org/source/openssl-1.1.1k.tar.gz
@@ -19,6 +33,7 @@ tar -xvzf libsrtp-2.3.0.tar.gz && rm -rf libsrtp-2.3.0.tar.gz && cd /libsrtp-2.3
 make -j8 && make install
 
 echo "zlm 安装"
+mkdir -p /zlm
 # 下载预编译好的可执行文件 区分x86_64和aarch64
 if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "i686" ]; then
     DOWNLOAD_ZLM_URL="https://res.cvvii.com/zlm/x86_64.zip"
