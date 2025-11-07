@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# 安装基础数据
-apt update -y && apt install -y curl
-
-# 更新软件包
-echo '更新apt 安装基础依赖'
-apt update -y && apt install -y unzip wget git vim build-essential cmake libssl-dev libsdl1.2-compat-dev libavcodec-dev libavutil-dev openssh-client dmidecode ffmpeg inetutils-ping
-
 # openssl 安装
 echo "openssl 安装"
 cd /
@@ -46,3 +39,10 @@ node -v && npm -v
 # 安装init.js的依赖
 echo '安装init.js的依赖'
 cd /init && npm i --production --registry=https://registry.npmmirror.com
+
+# 复制配置文件
+mkdir -p /civi/.conf/
+cp /init/config.json /civi/.conf/config.json
+
+# copy 代码到容器
+echo '环境初始化结束'
