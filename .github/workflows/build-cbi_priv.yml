@@ -37,7 +37,7 @@ jobs:
       - name: Set image name
         id: image
         run: |
-          IMAGE_NAME="cbi_base_node16"
+          IMAGE_NAME="cbi_priv"
           echo "image=$IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "Image name: $IMAGE_NAME"
 
