@@ -37,15 +37,17 @@ jobs:
       - name: Set image name
         id: image
         run: |
-          IMAGE_NAME="cbi_priv"
+          IMAGE_NAME="cbi_base_node16"
+          DIR_NAME="cbi_priv"
+          echo "dirname=$DIR_NAME" >> $GITHUB_OUTPUT
           echo "image=$IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "Image name: $IMAGE_NAME"
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./${{ steps.image.outputs.image }}
-          file: ./${{ steps.image.outputs.image }}/DockerFile
+          context: ./${{ steps.image.outputs.dirname }}
+          file: ./${{ steps.image.outputs.dirname }}/DockerFile
           platforms: linux/${{ matrix.arch }}
           tags: ${{ steps.image.outputs.image }}:${{ steps.tag.outputs.tag }}
           push: false
